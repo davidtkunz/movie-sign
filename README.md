@@ -1,5 +1,7 @@
 # movie-sign
 
+[![tests](https://github.com/davidtkunz/movie-sign/actions/workflows/tests.yml/badge.svg)](https://github.com/davidtkunz/movie-sign/actions/workflows/tests.yml)
+
 Generate an MST3K-style riff track for a bad movie: three voices heckling from the
 back of the theater, timed to land in the silences so they never talk over the film.
 
