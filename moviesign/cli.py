@@ -80,6 +80,7 @@ def _prepare(video: Path, out: Path, cfg: Config, args):
         min_gap=cfg.min_gap,
         margin=cfg.margin,
         max_riff_seconds=cfg.max_riff_seconds,
+        head_skip=getattr(args, "head_skip", 30.0),
     )
     kept = thin_gaps(gaps, runtime, cfg.max_riffs)
     print(f"  {len(gaps)} gaps of {cfg.min_gap}s or more; keeping {len(kept)}")
@@ -250,6 +251,8 @@ def build_parser() -> argparse.ArgumentParser:
     def add_timing(p):
         p.add_argument("--min-gap", type=float, help="Shortest silence worth a joke (seconds)")
         p.add_argument("--max-riffs", type=int, help="Cap on riffs for the whole movie")
+        p.add_argument("--head-skip", type=float, default=30.0,
+                       help="Leave the first N seconds alone — logos, studio cards (default: 30)")
 
     def add_writing(p):
         p.add_argument("--rating", choices=["PG", "R", "HARD-R"], help="How filthy (default: R)")

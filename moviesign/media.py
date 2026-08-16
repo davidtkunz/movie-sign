@@ -152,12 +152,19 @@ def audio_duration(path: Path) -> float:
     return duration(path)
 
 
-def pitch_filter(semitones: float) -> str | None:
+def sample_rate(path: Path) -> int:
+    for stream in probe(path).get("streams", []):
+        if stream.get("codec_type") == "audio" and stream.get("sample_rate"):
+            return int(stream["sample_rate"])
+    return 44100
+
+
+def pitch_filter(semitones: float, rate: int = 44100) -> str | None:
     """Shift pitch without changing duration — resample up, then slow back down."""
     if abs(semitones) < 0.01:
         return None
     ratio = 2 ** (semitones / 12.0)
-    return f"asetrate=44100*{ratio:.6f},aresample=44100,atempo={1/ratio:.6f}"
+    return f"asetrate={rate}*{ratio:.6f},aresample={rate},atempo={1/ratio:.6f}"
 
 
 def transform_audio(
@@ -169,7 +176,9 @@ def transform_audio(
 ) -> Path:
     """Apply speed-up and/or pitch shift, writing a new file."""
     filters = []
-    pitch = pitch_filter(semitones)
+    # Read the real rate rather than assuming 44.1k, so a voice model that
+    # returns something else doesn't come out transposed.
+    pitch = pitch_filter(semitones, sample_rate(src)) if abs(semitones) >= 0.01 else None
     if pitch:
         filters.append(pitch)
     if abs(tempo - 1.0) > 0.001:
