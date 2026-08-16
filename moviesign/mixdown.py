@@ -9,6 +9,7 @@ memory, and re-encoded to mp3 once at the end.
 from __future__ import annotations
 
 import concurrent.futures
+import os
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -108,7 +109,11 @@ def build_track(
 ) -> tuple[Path, int]:
     """Lay the riffs onto silence at their timecodes. Returns (path, riffs placed)."""
     sr = cfg.sample_rate
-    raw_path = Path(tempfile.mkstemp(suffix=".pcm", dir=str(work))[1])
+    # mkstemp hands back an open OS handle; Windows won't let us unlink the file
+    # later unless we close it before reopening the path ourselves.
+    handle, raw_name = tempfile.mkstemp(suffix=".pcm", dir=str(work))
+    os.close(handle)
+    raw_path = Path(raw_name)
     cursor = 0  # samples written so far
     placed = 0
 

@@ -113,6 +113,7 @@ def _grab_frames(video: Path, gaps, work: Path, cfg: Config) -> dict:
 def cmd_gaps(args) -> int:
     """Free dry run: show where riffs would land, without calling any API."""
     cfg = Config.load()
+    _apply_overrides(cfg, args)
     out = Path(args.out)
     _, runtime, _, gaps = _prepare(Path(args.video), out, cfg, args)
 
@@ -246,9 +247,11 @@ def build_parser() -> argparse.ArgumentParser:
                        help="Whisper size if transcribing: tiny/base/small/medium")
         p.add_argument("--force", action="store_true", help="Ignore cached subtitles")
 
-    def add_writing(p):
+    def add_timing(p):
         p.add_argument("--min-gap", type=float, help="Shortest silence worth a joke (seconds)")
         p.add_argument("--max-riffs", type=int, help="Cap on riffs for the whole movie")
+
+    def add_writing(p):
         p.add_argument("--rating", choices=["PG", "R", "HARD-R"], help="How filthy (default: R)")
         p.add_argument("--riff-rate", type=float, help="Target fraction of gaps to riff, 0-1")
         p.add_argument("--model", help="Claude model id")
@@ -259,10 +262,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("gaps", help="Show where riffs would land (free, no API calls)")
     add_common(p)
+    add_timing(p)
     p.set_defaults(func=cmd_gaps)
 
     p = sub.add_parser("script", help="Write the riffs (Claude only, no audio)")
     add_common(p)
+    add_timing(p)
     add_writing(p)
     p.set_defaults(func=cmd_script)
 
@@ -273,6 +278,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("riff", help="Full pipeline: script then render")
     add_common(p)
+    add_timing(p)
     add_writing(p)
     p.set_defaults(func=cmd_riff)
 
