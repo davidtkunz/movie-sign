@@ -1,0 +1,30 @@
+# movie-sign output and caches
+output/
+*.riffs.mp3
+*.riffs.srt
+moviesign.config.json
+
+# media
+*.mkv
+*.mp4
+*.avi
+*.mov
+*.srt
+*.mp3
+*.wav
+*.pcm
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# editors / os
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

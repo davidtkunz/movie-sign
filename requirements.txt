@@ -1,0 +1,6 @@
+anthropic>=0.69
+requests>=2.31
+
+# Optional: only needed when a movie has no text subtitle track and you want
+# movie-sign to transcribe the audio itself.
+#   pip install faster-whisper
