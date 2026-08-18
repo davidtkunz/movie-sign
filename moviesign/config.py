@@ -40,6 +40,16 @@ DEFAULT_VOICES: dict[str, dict[str, Any]] = {
     },
 }
 
+# Windows usually ships only David and Zira, so the three bots are separated
+# by rate and a post-hoc pitch shift as much as by voice. Host is the plain
+# baseline; Crow is fast and pitched down to a rasp; Servo is pitched well up
+# into puppet territory.
+DEFAULT_SAPI_VOICES: dict[str, dict[str, Any]] = {
+    "host":  {"voice": "Microsoft David Desktop", "rate": 0, "pitch_semitones": 0.0},
+    "crow":  {"voice": "Microsoft Zira Desktop",  "rate": 3, "pitch_semitones": -1.5},
+    "servo": {"voice": "Microsoft David Desktop", "rate": 1, "pitch_semitones": 4.0},
+}
+
 SPEAKERS = tuple(DEFAULT_VOICES)
 
 
@@ -78,9 +88,15 @@ class Config:
     frame_width: int = 768
 
     # --- voice --------------------------------------------------------------
+    tts_backend: str = "sapi"
+    """Which voice engine: "sapi" (free, Windows, no account) or "elevenlabs"."""
+
     tts_model: str = "eleven_turbo_v2_5"
     voices: dict[str, dict[str, Any]] = field(
         default_factory=lambda: json.loads(json.dumps(DEFAULT_VOICES))
+    )
+    sapi_voices: dict[str, dict[str, Any]] = field(
+        default_factory=lambda: json.loads(json.dumps(DEFAULT_SAPI_VOICES))
     )
 
     # --- output -------------------------------------------------------------
@@ -102,12 +118,20 @@ class Config:
             merged = dict(defaults)
             merged.update(cfg.voices.get(speaker, {}))
             cfg.voices[speaker] = merged
+        for speaker, defaults in DEFAULT_SAPI_VOICES.items():
+            merged = dict(defaults)
+            merged.update(cfg.sapi_voices.get(speaker, {}))
+            cfg.sapi_voices[speaker] = merged
         return cfg
 
     def save(self, path: Path | None = None) -> Path:
         path = path or Path.cwd() / CONFIG_NAME
         path.write_text(json.dumps(asdict(self), indent=2), encoding="utf-8")
         return path
+
+    def pitch_for(self, speaker: str) -> float:
+        table = self.sapi_voices if self.tts_backend == "sapi" else self.voices
+        return float(table.get(speaker, {}).get("pitch_semitones", 0.0))
 
     def word_budget(self, usable_seconds: float) -> int:
         return max(2, int(usable_seconds * self.words_per_second))

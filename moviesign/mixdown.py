@@ -38,7 +38,7 @@ def _render_one(riff: PlacedRiff, cfg: Config, cache: Path, work: Path) -> Rende
     if spoken <= 0:
         return None
 
-    semitones = float(cfg.voices[riff.speaker].get("pitch_semitones", 0.0))
+    semitones = cfg.pitch_for(riff.speaker)
     budget = riff.budget_seconds
     tempo = 1.0
 
@@ -51,7 +51,7 @@ def _render_one(riff: PlacedRiff, cfg: Config, cache: Path, work: Path) -> Rende
         tempo = needed
 
     if abs(tempo - 1.0) > 0.001 or abs(semitones) > 0.01:
-        adjusted = work / f"fit-{riff.gap_id}-{riff.speaker}.mp3"
+        adjusted = work / f"fit-{riff.gap_id}-{riff.speaker}.wav"
         media.transform_audio(raw, adjusted, tempo=tempo, semitones=semitones)
         raw = adjusted
         spoken = media.audio_duration(raw)

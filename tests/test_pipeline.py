@@ -20,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from moviesign import media, mixdown  # noqa: E402
 from moviesign.config import Config  # noqa: E402
 from moviesign.cues import Cue, Gap, find_gaps, parse_srt, thin_gaps  # noqa: E402
+from moviesign.voice import synthesize  # noqa: E402
 from moviesign.writer import PlacedRiff, RiffBatch, _gap_blocks, build_system  # noqa: E402
 
 FAILS: list[str] = []
@@ -190,6 +191,34 @@ def test_audio(work: Path) -> None:
     check("subtitles name the speaker", "CROW:" in body)
 
 
+def test_sapi(work: Path) -> None:
+    from moviesign import sapi
+
+    print()
+    if not sapi.available():
+        print("[4b] windows sapi: skipped (not Windows)")
+        return
+    print("[4b] windows sapi backend")
+
+    cfg = Config()
+    check("sapi is the zero-setup default", cfg.tts_backend, "sapi")
+    check("some system voice is installed", len(sapi.installed_voices()) >= 1)
+
+    line = "That is not a spaceship, that is a hubcap with ambition."
+    seen = {}
+    for speaker in ("host", "crow", "servo"):
+        wav = synthesize(line, speaker, cfg, work / "sapi")
+        seen[speaker] = media.audio_duration(wav)
+        check(f"{speaker} produced audio", seen[speaker] > 0.5)
+
+    # Rate differences must actually change delivery, or the bots are identical.
+    check("crow talks faster than host", seen["crow"] < seen["host"])
+    check("pitch table is per-backend", cfg.pitch_for("servo"), 4.0, tol=0.001)
+
+    cached = synthesize(line, "host", cfg, work / "sapi")
+    check("second call served from cache", cached.exists())
+
+
 def test_writer(work: Path) -> None:
     print("\n[5] structured-output schema is API-legal")
     schema = RiffBatch.model_json_schema()
@@ -267,6 +296,7 @@ def main() -> int:
     with tempfile.TemporaryDirectory() as tmp:
         work = Path(tmp)
         test_audio(work)
+        test_sapi(work)
         test_writer(work)
 
     print("\n" + ("ALL PASS" if not FAILS else f"{len(FAILS)} FAILURE(S): {FAILS}"))

@@ -10,6 +10,7 @@ from typing import Any
 
 import requests
 
+from . import sapi
 from .config import Config, elevenlabs_key
 
 API = "https://api.elevenlabs.io/v1"
@@ -43,7 +44,28 @@ def synthesize(
     *,
     retries: int = 4,
 ) -> Path:
-    """Render one line. Returns a path to an mp3, cached by content hash."""
+    """Render one line through whichever backend the config selects."""
+    if cfg.tts_backend == "sapi":
+        voice = cfg.sapi_voices[speaker]
+        return sapi.speak(
+            text, voice.get("voice", ""), int(voice.get("rate", 0)), cache_dir
+        )
+    if cfg.tts_backend != "elevenlabs":
+        raise VoiceError(
+            f"unknown tts_backend {cfg.tts_backend!r} "
+            "(expected 'sapi' or 'elevenlabs')"
+        )
+    return _elevenlabs(text, speaker, cfg, cache_dir, retries=retries)
+
+
+def _elevenlabs(
+    text: str,
+    speaker: str,
+    cfg: Config,
+    cache_dir: Path,
+    *,
+    retries: int = 4,
+) -> Path:
     voice = cfg.voices[speaker]
     voice_id = voice["voice_id"]
     settings = {

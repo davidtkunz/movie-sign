@@ -179,10 +179,10 @@ def cmd_render(args) -> int:
     print(f"  {len(rendered)} spoken, {len(dropped)} dropped for overrunning their gap")
 
     stem = video.stem
-    mp3 = out / f"{stem}.riffs.mp3"
+    mp3 = out / f"{stem}.riffs.{cfg.tts_backend}.mp3"
     print("\n  building track...")
     mp3, placed = mixdown.build_track(rendered, runtime, mp3, cfg, work)
-    srt = mixdown.write_srt(rendered, out / f"{stem}.riffs.srt")
+    srt = mixdown.write_srt(rendered, out / f"{stem}.riffs.{cfg.tts_backend}.srt")
 
     size_mb = mp3.stat().st_size / 1_048_576
     print(f"\n  {mp3}  ({size_mb:.1f} MB, {placed} riffs placed)")
@@ -200,16 +200,29 @@ def cmd_riff(args) -> int:
 
 
 def cmd_voices(args) -> int:
-    from .voice import list_voices
+    from . import sapi
 
-    voices = list_voices()
-    print(f"\n  {len(voices)} voices on this account:\n")
-    for v in voices:
-        labels = v.get("labels") or {}
-        desc = ", ".join(f"{k}={val}" for k, val in labels.items() if k in
-                         ("gender", "age", "accent", "description"))
-        print(f"  {v['voice_id']}  {v['name']:<22} {desc}")
-    print(f"\n  Put the ids you want in {CONFIG_NAME} under \"voices\".")
+    print()
+    if sapi.available():
+        names = sapi.installed_voices()
+        print(f"  Windows SAPI (free, no account) - {len(names)} installed:")
+        for name in names:
+            print(f"    {name}")
+        print("    Put these under \"sapi_voices\" in the config. Only two voices?")
+        print("    That is normal - separate the bots with \"rate\" and \"pitch_semitones\".")
+    else:
+        print("  Windows SAPI: not available on this platform")
+
+    print()
+    try:
+        from .voice import list_voices
+
+        voices = list_voices()
+        print(f"  ElevenLabs (paid) - {len(voices)} on this account:")
+        for v in voices:
+            print(f"    {v['voice_id']}  {v['name']}")
+    except Exception as exc:
+        print(f"  ElevenLabs: unavailable ({exc})")
     return 0
 
 
@@ -222,6 +235,8 @@ def cmd_init(args) -> int:
 
 
 def _apply_overrides(cfg: Config, args) -> None:
+    if getattr(args, "backend", None):
+        cfg.tts_backend = args.backend
     for name in ("min_gap", "max_riffs", "rating", "model", "effort", "batch_size", "riff_rate"):
         value = getattr(args, name, None)
         if value is not None:
@@ -276,6 +291,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("render", help="Speak an existing script and build the track")
     add_common(p)
+    p.add_argument("--backend", choices=["sapi", "elevenlabs"],
+                   help="Voice engine. Re-run with a different one to re-voice "
+                        "the same script without rewriting a single joke.")
     p.add_argument("--workers", type=int, default=4, help="Concurrent TTS calls")
     p.set_defaults(func=cmd_render)
 
@@ -283,6 +301,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_common(p)
     add_timing(p)
     add_writing(p)
+    p.add_argument("--backend", choices=["sapi", "elevenlabs"], help="Voice engine")
     p.set_defaults(func=cmd_riff)
 
     p = sub.add_parser("voices", help="List the ElevenLabs voices on your account")

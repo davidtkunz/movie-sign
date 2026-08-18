@@ -25,7 +25,8 @@ your video file.)
 3. **Write the jokes.** Batches of gaps go to Claude with the surrounding dialogue
    and a frame grabbed from the middle of the silence, so the riffs are about what's
    actually on screen — the boom mic, the matte painting, the hair.
-4. **Speak them.** ElevenLabs, one voice per bot.
+4. **Speak them.** Windows' own voices for free, or ElevenLabs if you want
+   real performances. One voice per bot either way.
 5. **Lay them down.** Each riff is placed at its timecode on a silent timeline.
    Anything that runs long gets sped up slightly, or dropped if that isn't enough.
 
@@ -50,11 +51,14 @@ git clone https://github.com/davidtkunz/movie-sign
 cd movie-sign
 pip install -r requirements.txt
 
-$env:ANTHROPIC_API_KEY  = "sk-ant-..."     # writes the jokes
-$env:ELEVENLABS_API_KEY = "..."            # speaks them
+setx ANTHROPIC_API_KEY "sk-ant-..."     # writes the jokes - required
 ```
 
-To make the keys stick across terminal sessions, use `setx ANTHROPIC_API_KEY "sk-ant-..."`.
+That's the only account you need. Voices default to the ones already built into
+Windows, which cost nothing. If the movie has no subtitle track, add
+`pip install faster-whisper` and it transcribes the audio itself - also free.
+
+For better voices, set `ELEVENLABS_API_KEY` too and pass `--backend elevenlabs`.
 
 ## Usage
 
@@ -83,19 +87,46 @@ Outputs land in `output/`:
 
 | File | What it is |
 |---|---|
-| `<movie>.riffs.mp3` | The commentary track. Play alongside the movie. |
-| `<movie>.riffs.srt` | The riffs as subtitles, for reading along or checking timing. |
+| `<movie>.riffs.sapi.mp3` | The commentary track. Play alongside the movie. |
+| `<movie>.riffs.sapi.srt` | The riffs as subtitles, for reading along or checking timing. |
 | `script.txt` | Human-readable script with timecodes. |
 | `riffs.json` | The editable script. Change this, re-run `render`. |
 
 Everything expensive is cached under `output/.cache/`, keyed by content — re-running
 `render` after editing three lines only pays to re-speak those three lines.
 
+## Voices
+
+Two backends, and the script is saved separately from the audio so you can
+switch whenever you like without rewriting a single joke.
+
+| | `sapi` (default) | `elevenlabs` |
+|---|---|---|
+| Cost | free | credits per character |
+| Account | none | required |
+| Sounds like | a 1998 text-to-speech program | an actual performer |
+| Platform | Windows only | anywhere |
+
+The stock Windows voices are robotic, which suits two puppet robots better than
+you'd think. Windows usually ships only two of them, so the three bots are
+separated by `rate` and `pitch_semitones` as much as by voice - Servo is just
+David pitched four semitones up.
+
+```powershell
+python -m moviesign voices                        # list both backends
+python -m moviesign render "movie.mkv"                          # free voices
+python -m moviesign render "movie.mkv" --backend elevenlabs     # same jokes, better voices
+```
+
+Re-voicing never costs a Claude call. `riffs.json` is the durable artifact; each
+backend writes its own `.riffs.<backend>.mp3` so tracks don't overwrite each
+other, and every spoken line is cached by content hash.
+
 ## Configuration
 
 ```powershell
 python -m moviesign init      # writes moviesign.config.json
-python -m moviesign voices    # lists the voices on your ElevenLabs account
+python -m moviesign voices    # lists Windows and ElevenLabs voices
 ```
 
 The settings worth knowing:
@@ -108,16 +139,18 @@ The settings worth knowing:
 | `max_riffs` | `400` | Ceiling per movie. Gaps are sampled across the runtime, not front-loaded. |
 | `words_per_second` | `2.6` | Assumed delivery speed. Lower it if riffs keep getting dropped. |
 | `max_tempo_stretch` | `1.12` | How much a too-long riff may be sped up before it's cut instead. |
-| `voices` | Josh / Arnold / Antoni | Voice ids per bot. Also `pitch_semitones`, if you want Servo higher. |
+| `tts_backend` | `sapi` | `sapi` for free Windows voices, `elevenlabs` for paid ones. |
+| `sapi_voices` | David / Zira | Per bot: Windows `voice` name, `rate` (-10..10), `pitch_semitones`. |
+| `voices` | Josh / Arnold / Antoni | ElevenLabs ids per bot, plus `pitch_semitones`. |
 
 Useful flags: `--rating HARD-R`, `--min-gap 3`, `--max-riffs 150`, `--no-vision`
 (skip frames — cheaper, but the jokes get more generic), `--subs movie.srt`.
 
 ## Notes
 
-- **Cost.** A 90-minute feature runs roughly $2–4 of Claude for the writing and a
-  few dollars of ElevenLabs credits for the voices, depending on riff count. The
-  `gaps` command is free and tells you how many riffs you're looking at.
+- **Cost.** A 90-minute feature runs roughly $2–4 of Claude for the writing.
+  Voices are free on the default backend. The `gaps` command costs nothing at
+  all and tells you how many riffs you're looking at before you commit.
 - **Bitmap subtitles.** Blu-ray rips often carry PGS subtitles, which are images,
   not text. movie-sign can't read those and will fall back to Whisper — or you can
   pass a `.srt` from elsewhere with `--subs`.
