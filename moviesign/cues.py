@@ -43,6 +43,24 @@ def _to_seconds(h: str, m: str, s: str, ms: str) -> float:
     return int(h) * 3600 + int(m) * 60 + int(s) + int(ms.ljust(3, "0")) / 1000.0
 
 
+# A cue may not claim more runtime than its words could plausibly fill.
+# Whisper sometimes returns a segment with no word timestamps, and its
+# padded end time then swallows a minute of silence for a two-word line.
+# Authored subtitles also linger past the speech for readability. Both
+# hide gaps. The rate here is deliberately slow and the buffer generous:
+# trimming a cue early only shifts a riff later, but trimming too much
+# would invent a gap in the middle of a sentence.
+SLOWEST_DELIVERY_WPS = 1.5
+CUE_TAIL_ALLOWANCE = 2.0
+
+
+def plausible_end(start: float, end: float, text: str) -> float:
+    """Clamp a cue end to what its word count could actually take to say."""
+    words = max(1, len(text.split()))
+    ceiling = start + words / SLOWEST_DELIVERY_WPS + CUE_TAIL_ALLOWANCE
+    return min(end, ceiling)
+
+
 def parse_srt(text: str) -> list[Cue]:
     """Parse SRT or WebVTT. Tolerant of BOMs, CRLF, missing indices, and styling tags."""
     text = text.lstrip("﻿").replace("\r\n", "\n").replace("\r", "\n")
@@ -67,7 +85,7 @@ def parse_srt(text: str) -> list[Cue]:
             continue
         if end <= start:
             continue
-        cues.append(Cue(start, end, body))
+        cues.append(Cue(start, plausible_end(start, end, body), body))
 
     cues.sort(key=lambda c: c.start)
     return cues

@@ -126,17 +126,38 @@ def transcribe(video: Path, out_srt: Path, model_size: str = "base") -> Path:
 
     from .cues import timestamp
 
+    NL = chr(10)  # keeps this module free of escape-mangling in tooling
+
     print(f"  transcribing with Whisper ({model_size}) — this takes a while...")
     model = WhisperModel(model_size, device="auto", compute_type="int8")
-    segments, _ = model.transcribe(str(video), vad_filter=True)
+    # word_timestamps is not optional here. Whisper pads each segment's end
+    # out to the next segment's start, so a six-word line can claim four
+    # minutes of runtime. Gap detection then reads that as "still talking"
+    # and finds almost no silence in the entire movie. The last word's end
+    # is the only honest boundary.
+    segments, _ = model.transcribe(
+        str(video), vad_filter=True, word_timestamps=True
+    )
 
     out_srt.parent.mkdir(parents=True, exist_ok=True)
     with out_srt.open("w", encoding="utf-8") as fh:
-        for i, seg in enumerate(segments, 1):
+        written = 0
+        for seg in segments:
             text = seg.text.strip()
             if not text:
                 continue
-            fh.write(f"{i}\n{timestamp(seg.start)} --> {timestamp(seg.end)}\n{text}\n\n")
+            words = [w for w in (seg.words or []) if w.end > w.start]
+            begin = words[0].start if words else seg.start
+            finish = words[-1].end if words else seg.end
+            if finish <= begin:
+                continue
+            written += 1
+            block = (
+                str(written) + NL
+                + timestamp(begin) + " --> " + timestamp(finish) + NL
+                + text + NL + NL
+            )
+            fh.write(block)
     return out_srt
 
 

@@ -90,6 +90,38 @@ def test_cues() -> None:
     check("thinned gaps are renumbered", [g.id for g in thinned], [0, 1])
 
 
+def test_whisper_padding_regression() -> None:
+    """Whisper pads each segment's end to the next segment's start.
+
+    Real transcripts come back with nearly every cue butting against the next,
+    and an occasional segment claiming a minute of runtime for a two-word line.
+    Read naively, that says the movie is 93% dialogue and has nowhere to put a
+    joke. This is the exact shape that the hand-written SRT above cannot catch,
+    because authored subtitles have honest end times.
+    """
+    print()
+    print("[1b] whisper-shaped transcript still yields gaps")
+    from moviesign.cues import plausible_end
+
+    check("two-word line can't claim a minute",
+          round(plausible_end(0.0, 63.4, "Hey, man."), 1), 3.3, tol=0.05)
+    check("an honest cue is left alone",
+          plausible_end(0.0, 4.0, " ".join(["word"] * 10)), 4.0, tol=0.001)
+
+    # Cue ends chained to the next cue's start, the way Whisper emits them.
+    padded = [
+        Cue(35.0, 41.5, "We should not have come to this planet."),
+        Cue(41.5, 95.0, "Hey."),           # two chars, claims 53 seconds
+        Cue(95.0, 99.0, "Then we go in on foot."),
+    ]
+    clamped = [Cue(c.start, plausible_end(c.start, c.end, c.text), c.text) for c in padded]
+    gaps = find_gaps(clamped, 120.0, min_gap=2.0, margin=0.35,
+                     max_riff_seconds=9.0, head_skip=0)
+    check("padded transcript still exposes silence", len(gaps) >= 3)
+    check("silence found inside the over-long cue",
+          any(44 < g.start < 95 for g in gaps))
+
+
 def tone(path: Path, seconds: float) -> Path:
     subprocess.run(
         [media.ffmpeg(), "-y", "-v", "error", "-f", "lavfi",
@@ -231,6 +263,7 @@ def main() -> int:
         return 0
 
     test_cues()
+    test_whisper_padding_regression()
     with tempfile.TemporaryDirectory() as tmp:
         work = Path(tmp)
         test_audio(work)
