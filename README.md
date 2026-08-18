@@ -10,11 +10,19 @@ except the jokes. Play it alongside your own copy, both starting at 00:00. (This
 is how RiffTrax ships their tracks, and it's the reason this repo doesn't touch
 your video file.)
 
+Real output from a 1934 John Wayne western:
+
 ```
-[00:04:12]  CROW: That's not a spaceship, that's a hubcap with ambition.
-[00:04:31] SERVO: I've made a huge mistake. — the actor, silently, forever
-[00:05:03]  HOST: The fog machine is the only thing giving a performance.
+[00:11:19]  HOST: Somebody bumped the lens cap.
+[00:16:04] SERVO: The horse has read the script and is quietly leaving.
+[00:21:53]  CROW: There's a radio tower on your 1880s hilltop, fellas.
+[00:30:33]  CROW: The cinematographer has fully surrendered. That's a hat and a rumor.
+[00:34:56]  CROW: That wig came off a mop, and the mop wants it back.
 ```
+
+Those last three needed a frame, not a transcript. **[Hear it and read all 52
+riffs](examples/star-packer/)** — including a 28-second audio sample of the free
+Windows voices.
 
 ## How it works
 

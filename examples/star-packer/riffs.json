@@ -1,0 +1,366 @@
+[
+  {
+    "gap_id": 0,
+    "speaker": "crow",
+    "line": "The Players, starring a golf ball the size of a wagon wheel.",
+    "start": 30.35,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 1,
+    "speaker": "host",
+    "line": "Riveting. A man and two horses, considering a creek.",
+    "start": 182.89666666666665,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 2,
+    "speaker": "servo",
+    "line": "Every hat in the county showed up. The heads were optional.",
+    "start": 226.54999999999998,
+    "budget_seconds": 6.7900000000000205
+  },
+  {
+    "gap_id": 4,
+    "speaker": "crow",
+    "line": "The action sequence: shrubs, a road, and a guy way over there.",
+    "start": 282.95000000000005,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 5,
+    "speaker": "servo",
+    "line": "That white horse is the only professional on this picture.",
+    "start": 312.76000000000005,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 6,
+    "speaker": "host",
+    "line": "She's acting at something eleven feet to the left of camera.",
+    "start": 387.53000000000003,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 7,
+    "speaker": "crow",
+    "line": "That feather cost more than the entire second act.",
+    "start": 431.88,
+    "budget_seconds": 5.109999999999957
+  },
+  {
+    "gap_id": 8,
+    "speaker": "crow",
+    "line": "The horse is doing all the acting in this scene.",
+    "start": 441.73,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 9,
+    "speaker": "servo",
+    "line": "Ah yes, the classic Western shot: eleven guys' asses.",
+    "start": 577.2666666666667,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 11,
+    "speaker": "crow",
+    "line": "Wardrobe found that hat in a bin marked \"vaguely.\"",
+    "start": 651.75,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 12,
+    "speaker": "host",
+    "line": "Somebody bumped the lens cap.",
+    "start": 679.0400000000001,
+    "budget_seconds": 3.3999999999998636
+  },
+  {
+    "gap_id": 13,
+    "speaker": "servo",
+    "line": "Two men, one doorway, zero reason to stand that close.",
+    "start": 694.5500000000001,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 15,
+    "speaker": "crow",
+    "line": "He's opening a safe the size of a lunchbox.",
+    "start": 774.1800000000001,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 16,
+    "speaker": "crow",
+    "line": "Buffalo Lager: the only actor here hitting its marks.",
+    "start": 847.94,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 17,
+    "speaker": "servo",
+    "line": "The horse has read the script and is quietly leaving.",
+    "start": 964.39,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 18,
+    "speaker": "host",
+    "line": "Filmed entirely against a bedsheet somebody's mother donated.",
+    "start": 989.12,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 20,
+    "speaker": "crow",
+    "line": "Left to right, then right to left. That's the whole budget.",
+    "start": 1092.3,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 21,
+    "speaker": "servo",
+    "line": "Two men standing in a room, refusing to face each other.",
+    "start": 1134.7033333333331,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 23,
+    "speaker": "crow",
+    "line": "Nine horse asses on screen, and none of them the lead.",
+    "start": 1185.56,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 24,
+    "speaker": "crow",
+    "line": "His mustache is doing all the acting in this film.",
+    "start": 1272.82,
+    "budget_seconds": 6.220000000000255
+  },
+  {
+    "gap_id": 25,
+    "speaker": "servo",
+    "line": "Binoculars pointed at a gray bedsheet.",
+    "start": 1287.0733333333333,
+    "budget_seconds": 2.5366666666668607
+  },
+  {
+    "gap_id": 26,
+    "speaker": "host",
+    "line": "Reading a wanted poster written entirely in nicknames.",
+    "start": 1292.05,
+    "budget_seconds": 4.960000000000036
+  },
+  {
+    "gap_id": 27,
+    "speaker": "crow",
+    "line": "There's a radio tower on your 1880s hilltop, fellas.",
+    "start": 1313.73,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 29,
+    "speaker": "servo",
+    "line": "They shot this against a wall in somebody's garage.",
+    "start": 1375.11,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 30,
+    "speaker": "host",
+    "line": "The whole ranch is one adobe wall and a horse.",
+    "start": 1411.85,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 31,
+    "speaker": "crow",
+    "line": "Sheriff loses a fistfight with a fence post.",
+    "start": 1423.78,
+    "budget_seconds": 3.6400000000001
+  },
+  {
+    "gap_id": 32,
+    "speaker": "crow",
+    "line": "That fireplace is one good sneeze from collapsing.",
+    "start": 1474.6,
+    "budget_seconds": 4.940000000000282
+  },
+  {
+    "gap_id": 33,
+    "speaker": "servo",
+    "line": "Operator, connect me to Generic Menace.",
+    "start": 1524.1799999999998,
+    "budget_seconds": 3.3900000000003274
+  },
+  {
+    "gap_id": 35,
+    "speaker": "crow",
+    "line": "He lit this scene with the memory of a lamp.",
+    "start": 1535.8899999999999,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 36,
+    "speaker": "servo",
+    "line": "Behind this magnificent horse, allegedly, a man.",
+    "start": 1557.5633333333333,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 37,
+    "speaker": "host",
+    "line": "Two silhouettes at dusk. Cheaper than faces.",
+    "start": 1577.53,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 39,
+    "speaker": "crow",
+    "line": "I paid to watch the inside of a coal chute.",
+    "start": 1821.28,
+    "budget_seconds": 5.210000000000036
+  },
+  {
+    "gap_id": 40,
+    "speaker": "crow",
+    "line": "The cinematographer has fully surrendered. That's a hat and a rumor.",
+    "start": 1833.8566666666666,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 41,
+    "speaker": "host",
+    "line": "Projector's off. We're just watching a wall.",
+    "start": 1896.82,
+    "budget_seconds": 3.770000000000209
+  },
+  {
+    "gap_id": 43,
+    "speaker": "crow",
+    "line": "That wig came off a mop, and the mop wants it back.",
+    "start": 2096.27,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 44,
+    "speaker": "servo",
+    "line": "Sheriff's got a great ass, admittedly.",
+    "start": 2117.66,
+    "budget_seconds": 2.0700000000001637
+  },
+  {
+    "gap_id": 45,
+    "speaker": "host",
+    "line": "Eleven dollars of jail, and they're gonna shoot it from here for a while.",
+    "start": 2121.69,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 46,
+    "speaker": "crow",
+    "line": "That belt buckle is visible from orbit.",
+    "start": 2142.0899999999997,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 47,
+    "speaker": "servo",
+    "line": "And he sprints off, hand firmly clamped to the buckle.",
+    "start": 2165.74,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 48,
+    "speaker": "crow",
+    "line": "Machine gun under the straw. Nothing suspicious about that haystack.",
+    "start": 2196.7,
+    "budget_seconds": 3.7900000000004184
+  },
+  {
+    "gap_id": 49,
+    "speaker": "servo",
+    "line": "Nothing builds trust like planning a heist with a revolver aimed at your buddy's kidney.",
+    "start": 2204.24,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 51,
+    "speaker": "crow",
+    "line": "Wardrobe's entire concept here was headband, feather, and hoping nobody looks too closely.",
+    "start": 2225.95,
+    "budget_seconds": 8.970000000000255
+  },
+  {
+    "gap_id": 53,
+    "speaker": "host",
+    "line": "And now the film holds on a porch post for six seconds.",
+    "start": 2258.61,
+    "budget_seconds": 6.150000000000091
+  },
+  {
+    "gap_id": 55,
+    "speaker": "servo",
+    "line": "I'm a hole in a rock, and I've got more screen presence than the sheriff.",
+    "start": 2311.87,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 56,
+    "speaker": "host",
+    "line": "A window. The film's most expressive performer.",
+    "start": 2332.7599999999998,
+    "budget_seconds": 2.7900000000004184
+  },
+  {
+    "gap_id": 57,
+    "speaker": "crow",
+    "line": "Nine men holding up one guy who weighs eleven pounds.",
+    "start": 2346.35,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 58,
+    "speaker": "servo",
+    "line": "The world's slowest parade, and nobody's throwing candy.",
+    "start": 2461.2,
+    "budget_seconds": 5.630000000000109
+  },
+  {
+    "gap_id": 59,
+    "speaker": "crow",
+    "line": "Scatter and stay hidden, he says, on an open road, in daylight.",
+    "start": 2476.45,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 60,
+    "speaker": "host",
+    "line": "That's the fool girl. She's got a name at home.",
+    "start": 2506.79,
+    "budget_seconds": 4.320000000000164
+  },
+  {
+    "gap_id": 62,
+    "speaker": "servo",
+    "line": "Welcome to the hideout \u2014 two sticks, a tarp, and a guy squinting.",
+    "start": 2554.39,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 63,
+    "speaker": "crow",
+    "line": "He's setting up a machine gun in a hay bale. Bold.",
+    "start": 2569.4433333333336,
+    "budget_seconds": 9.0
+  },
+  {
+    "gap_id": 64,
+    "speaker": "crow",
+    "line": "They're coming. All two of them, from a mile off.",
+    "start": 2630.74,
+    "budget_seconds": 9.0
+  }
+]

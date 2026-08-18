@@ -5,6 +5,7 @@ output/
 moviesign.config.json
 
 # media
+
 *.mkv
 *.mp4
 *.avi
@@ -13,6 +14,11 @@ moviesign.config.json
 *.mp3
 *.wav
 *.pcm
+
+# The committed example is the exception: it is what makes the repo legible
+# without anyone having to run the tool first. Must come after the rules above.
+!examples/
+!examples/**
 
 # python
 __pycache__/
